@@ -20,7 +20,7 @@ class PermId {
             return response.json();
         })
         .then(function(json) {
-            return JSON.parse(json);
+            return json;
         });
     }
 
