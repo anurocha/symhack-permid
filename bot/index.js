@@ -7,7 +7,24 @@ class PermId {
   constructor(apiKey) {
       this.apiKey = apiKey;
   }
-  
+
+  async taggingSearch(text) {
+    let searchUrl = `https://api.thomsonreuters.com/permid/calais`;
+    let apiKey = this.apiKey;
+    return fetch(searchUrl, {
+        method: 'POST',
+        headers: {
+            'X-AG-Access-Token': this.apiKey,
+            'Content-Type': 'text/raw',
+            'outputformat': 'application/json'
+        },
+        body: text
+    })
+    .then(response => {
+        return response.json()
+    });
+  }
+
   async getTaggingData(text) {
       let searchResult = await this.taggingSearch(text);
       let taggingResult = [];
