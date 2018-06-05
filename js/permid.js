@@ -7,6 +7,23 @@ class PermId {
         let searchUrl = `https://api.thomsonreuters.com/permid/search?q=${q}&access-token=${this.apiKey}`;
         return this.getResponse(searchUrl);
     }
+    
+    async taggingSearch(text) {
+        let searchUrl = `https://api.thomsonreuters.com/permid/calais`;
+        let apiKey = this.apiKey;
+        return fetch(searchUrl, {
+            method: 'POST',
+            headers: {
+                'X-AG-Access-Token': this.apiKey,
+                'Content-Type': 'text/raw',
+                'outputformat': 'application/json'
+            },
+            body: text
+        })
+        .then(response => {
+            return response.json()
+        });
+    }
 
     async getByPermIdUrl(permIdUrl) {
         if(!permIdUrl) return Promise.resolve({});
@@ -46,5 +63,19 @@ class PermId {
                 exchange: quoteEntity['tr-fin:hasExchangeCode']
             }
           });
+    }
+    
+    async getTaggingData(text) {
+        let searchResult = await this.taggingSeatch(test);
+        let taggingResult = [];
+        return new Promise(function(resolve, reject) {
+            for(var key in searchResult) {
+                var att = searchResult[key];
+                if(att._typeGroup === 'entities' && att._type === 'company') {
+                    taggingResult.push(att.name);
+                }
+            }
+            resolve(taggingResult);
+        });
     }
 }
